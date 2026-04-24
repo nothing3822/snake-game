@@ -5,7 +5,7 @@ package.domain = org.affaque
 source.dir = .
 source.include_exts = py
 version = 1.0
-requirements = python3,kivy
+requirements = python3,kivy,pyjnius==1.4.5
 orientation = portrait
 osx.python_version = 3
 osx.kivy_version = 2.3.1
