@@ -11,35 +11,21 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk \
-            python3-pip autoconf libtool \
-            pkg-config zlib1g-dev libncurses5-dev \
-            libncursesw5-dev libtinfo5 cmake \
-            libffi-dev libssl-dev
-          pip install buildozer cython
-
-      - name: Rename file to main.py
+      - name: Rename to main.py
         run: mv snake_kivy.py main.py
 
-      - name: Build APK
-        run: |
-          rm -rf ~/.buildozer .buildozer
-          yes | buildozer android debug 2>&1
-          echo "=== Finding APK ==="
-          find . -name "*.apk" 2>/dev/null
+      - name: Build with Kivy Action
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: android debug
+          buildozer_version: stable
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: snake-game-apk
-          path: "**/*.apk"
+          path: ${{ steps.buildozer.outputs.filename }}
+          
